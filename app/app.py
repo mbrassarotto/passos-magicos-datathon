@@ -19,6 +19,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 
+from treinar_modelo_gb import treinar_modelo
+
 # --------------------------------------------------------------------------
 # Configuração geral
 # --------------------------------------------------------------------------
@@ -33,7 +35,6 @@ st.set_page_config(
 # na raiz do repositório, não necessariamente na pasta do script.
 BASE_DIR = Path(__file__).resolve().parent
 DATA_PATH = BASE_DIR / "dados_pede.csv"
-MODEL_PATH = BASE_DIR / "modelo_gb_risco_temporal.joblib"
 
 CORES_PEDRA = {
     "Quartzo": "#8d99ae",
@@ -70,10 +71,10 @@ def carregar_dados() -> pd.DataFrame:
     return df
 
 
-@st.cache_resource
+@st.cache_resource(show_spinner="Treinando o modelo de risco (leva alguns segundos)...")
 def carregar_modelo():
     try:
-        return joblib.load(MODEL_PATH)
+        return treinar_modelo(DATA_PATH)
     except FileNotFoundError:
         return None
 
@@ -449,8 +450,8 @@ with abas[9]:
 
     if bundle is None:
         st.error(
-            f"Não encontrei o arquivo `{MODEL_PATH}` nesta pasta. "
-            "Rode `python treinar_modelo_gb.py` antes de usar esta aba."
+            f"Não encontrei o arquivo `{DATA_PATH.name}` nesta pasta para treinar o modelo. "
+            "Confirme que ele está na mesma pasta do app.py."
         )
     else:
         st.markdown(bundle["target_definition"])
