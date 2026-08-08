@@ -10,6 +10,8 @@ Arquivos esperados na mesma pasta:
     - modelo_gb_risco_temporal.joblib      (bundle do modelo, gerado por treinar_modelo_gb.py)
 """
 
+from pathlib import Path
+
 import joblib
 import numpy as np
 import pandas as pd
@@ -26,8 +28,12 @@ st.set_page_config(
     layout="wide",
 )
 
-DATA_PATH = "dados_pede.csv"
-MODEL_PATH = "modelo_gb_risco_temporal.joblib"
+# Caminhos relativos à pasta deste arquivo (app.py), não ao diretório de
+# trabalho do processo — no Streamlit Community Cloud, o app roda com o cwd
+# na raiz do repositório, não necessariamente na pasta do script.
+BASE_DIR = Path(__file__).resolve().parent
+DATA_PATH = BASE_DIR / "dados_pede.csv"
+MODEL_PATH = BASE_DIR / "modelo_gb_risco_temporal.joblib"
 
 CORES_PEDRA = {
     "Quartzo": "#8d99ae",
