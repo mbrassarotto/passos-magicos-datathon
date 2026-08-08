@@ -1,7 +1,8 @@
 # Datathon
 
 Pós graduação em Data Analytics: Projeto final.
-Tema:Passos Mágicos
+
+Tema: Passos Mágicos
 
 Autores:
 - **Pedro Lopes de Lucena**
