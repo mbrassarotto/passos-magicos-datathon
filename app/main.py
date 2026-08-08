@@ -26,9 +26,30 @@ st.set_page_config(
     layout="wide",
 )
 
+def _localizar_pasta_dados() -> Path:
+    """Localiza a pasta `data/` de forma robusta.
+
+    Procura a pasta `data/` como irmã do script (`main.py` na raiz do
+    repositório) e também um nível acima (caso `main.py` esteja dentro de
+    uma subpasta, como `app/`), cobrindo os dois layouts de repositório
+    mais comuns sem exigir que o arquivo esteja num local fixo.
+    """
+    candidatos = [
+        Path(__file__).resolve().parent / "data",
+        Path(__file__).resolve().parent.parent / "data",
+    ]
+    for candidato in candidatos:
+        if (candidato / "modelo_risco_nova_defasagem.joblib").exists():
+            return candidato
+    # Nenhuma encontrada: retorna o primeiro candidato para que a mensagem
+    # de erro mostre um caminho útil para depuração.
+    return candidatos[0]
+
+
 CAMINHO_BASE = Path(__file__).resolve().parent
-CAMINHO_MODELO = CAMINHO_BASE / "data" / "modelo_risco_nova_defasagem.joblib"
-CAMINHO_PREVISOES_2025 = CAMINHO_BASE / "data" / "previsoes_risco_2025.csv"
+CAMINHO_DADOS = _localizar_pasta_dados()
+CAMINHO_MODELO = CAMINHO_DADOS / "modelo_risco_nova_defasagem.joblib"
+CAMINHO_PREVISOES_2025 = CAMINHO_DADOS / "previsoes_risco_2025.csv"
 
 COLUNAS_ENTRADA_LOTE = [
     "ra",
